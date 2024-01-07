@@ -1,3 +1,4 @@
 *.pdf
 input_split_data/*
 snapdata/*
+data/*

@@ -7,7 +7,8 @@
 #include <filesystem>
 #include <stdio.h>
 #include <thread>
-#include "dateUtils.cpp"
+#include "dateUtils.h"
+#include <iostream>
 
 namespace fs = std::filesystem;
 
@@ -157,7 +158,6 @@ void StockSimulator::saveSnap() {
     int sz = line.size();
 
     std::lock_guard<std::mutex> lock(mutexes[ofID]);
-    fseek(outfile[ofID], 0, SEEK_END);
     fwrite(&sz, sizeof(int), 1, outfile[ofID]);
     const char *lineStr = line.c_str();
     fwrite(lineStr, sizeof(char), sz, outfile[ofID]);
@@ -167,27 +167,15 @@ void StockSimulator::saveSnap() {
 void StockSimulator::run() {
     std::cout << filePath << " begins simulating\n";
     infile = std::fopen(filePath.c_str(), "rb");
-    outfile = std::vector<FILE*>(TimeBlocks, nullptr);
-    for (int ofID = 0; ofID < TimeBlocks; ofID++) {
-        std::string ofPrefix = "./snapdata/";
-        std::string ofSuffix = ".dat";
-        std::string ofName = ofPrefix + intToStr(ofID, 3) + ofSuffix;
-        fs::create_directories(ofPrefix);
-
-        std::lock_guard<std::mutex> lock(mutexes[ofID]);
-        outfile[ofID] = std::fopen(ofName.c_str(), "ab+");
-    }
-
 
     OrderRaw orderRaw;
     while (fread(&orderRaw, sizeof(orderRaw), 1, infile) == 1) {
-//        std::cerr << "solving order index: " << orderRaw.index << ' ' << orderRaw.exchangeTime << "\n";
+//        std::cout << "solving order index: " << orderRaw.index << ' ' << orderRaw.exchangeTime << "\n";
         int nowSecond = getSecond(orderRaw.exchangeTime);
         if (lastProcessedSecond >= 0 && nowSecond > lastProcessedSecond) {
             saveSnap();
         }
         solveOrderTrade(orderRaw);
-//        std::cerr << "finish solving order index: " << orderRaw.index << ' ' << orderRaw.exchangeTime << "\n";
         if (checkStable()) {
             updL5();
         }
@@ -198,12 +186,5 @@ void StockSimulator::run() {
 
     if (infile != nullptr) {
         std::fclose(infile);
-    }
-    for (int i = 0; i < TimeBlocks; i++) {
-//        std::cout << "In run last: " << filePath << ", acquire lock\n";
-        std::lock_guard<std::mutex> lock(mutexes[i]);
-        if (outfile[i] != nullptr) {
-            std::fclose(outfile[i]);
-        }
     }
 }

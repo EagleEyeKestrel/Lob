@@ -37,9 +37,10 @@ public:
 
     void run();
 
+    static std::vector<FILE*> outfile;
+
 private:
     FILE *infile;
-    std::vector<FILE*> outfile;
     std::string filePath;
     std::string date;
     std::string symbol;

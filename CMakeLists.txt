@@ -3,4 +3,4 @@ project(Lob)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Lob main.cpp global.cpp fileWorker.cpp stockSim.cpp )
+add_executable(Lob main.cpp global.cpp fileWorker.cpp stockSim.cpp dateUtils.cpp)

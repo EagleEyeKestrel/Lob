@@ -1,11 +1,9 @@
 //
 // Created by ji luyang on 2024/1/3.
 //
+#include "dateUtils.h"
 
-#include <string>
-#include <iostream>
 int getSecond(int timestamp) {
-//    std::cerr << "timestamp: " << timestamp << "\n";
     return timestamp / 1000;
 }
 

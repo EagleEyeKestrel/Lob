@@ -129,6 +129,30 @@ Lob/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lob.dir/build.make CMakeFiles/Lob.dir/build
 .PHONY : Lob/fast
 
+dateUtils.o: dateUtils.cpp.o
+.PHONY : dateUtils.o
+
+# target to build an object file
+dateUtils.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lob.dir/build.make CMakeFiles/Lob.dir/dateUtils.cpp.o
+.PHONY : dateUtils.cpp.o
+
+dateUtils.i: dateUtils.cpp.i
+.PHONY : dateUtils.i
+
+# target to preprocess a source file
+dateUtils.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lob.dir/build.make CMakeFiles/Lob.dir/dateUtils.cpp.i
+.PHONY : dateUtils.cpp.i
+
+dateUtils.s: dateUtils.cpp.s
+.PHONY : dateUtils.s
+
+# target to generate assembly for a file
+dateUtils.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Lob.dir/build.make CMakeFiles/Lob.dir/dateUtils.cpp.s
+.PHONY : dateUtils.cpp.s
+
 fileWorker.o: fileWorker.cpp.o
 .PHONY : fileWorker.o
 
@@ -234,6 +258,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... Lob"
+	@echo "... dateUtils.o"
+	@echo "... dateUtils.i"
+	@echo "... dateUtils.s"
 	@echo "... fileWorker.o"
 	@echo "... fileWorker.i"
 	@echo "... fileWorker.s"

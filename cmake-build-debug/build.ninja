@@ -96,6 +96,12 @@ build CMakeFiles/Lob.dir/stockSim.cpp.o: CXX_COMPILER__Lob_Debug /Users/jiluyang
   OBJECT_DIR = CMakeFiles/Lob.dir
   OBJECT_FILE_DIR = CMakeFiles/Lob.dir
 
+build CMakeFiles/Lob.dir/dateUtils.cpp.o: CXX_COMPILER__Lob_Debug /Users/jiluyang/Desktop/Lob/dateUtils.cpp || cmake_object_order_depends_target_Lob
+  DEP_FILE = CMakeFiles/Lob.dir/dateUtils.cpp.o.d
+  FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk -std=gnu++17
+  OBJECT_DIR = CMakeFiles/Lob.dir
+  OBJECT_FILE_DIR = CMakeFiles/Lob.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Lob
@@ -104,7 +110,7 @@ build CMakeFiles/Lob.dir/stockSim.cpp.o: CXX_COMPILER__Lob_Debug /Users/jiluyang
 #############################################
 # Link the executable Lob
 
-build Lob: CXX_EXECUTABLE_LINKER__Lob_Debug CMakeFiles/Lob.dir/main.cpp.o CMakeFiles/Lob.dir/global.cpp.o CMakeFiles/Lob.dir/fileWorker.cpp.o CMakeFiles/Lob.dir/stockSim.cpp.o
+build Lob: CXX_EXECUTABLE_LINKER__Lob_Debug CMakeFiles/Lob.dir/main.cpp.o CMakeFiles/Lob.dir/global.cpp.o CMakeFiles/Lob.dir/fileWorker.cpp.o CMakeFiles/Lob.dir/stockSim.cpp.o CMakeFiles/Lob.dir/dateUtils.cpp.o
   FLAGS = -g -arch arm64 -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk
   OBJECT_DIR = CMakeFiles/Lob.dir
   POST_BUILD = :

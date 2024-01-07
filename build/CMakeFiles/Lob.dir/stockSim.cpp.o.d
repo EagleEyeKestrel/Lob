@@ -252,5 +252,5 @@ CMakeFiles/Lob.dir/stockSim.cpp.o: \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/istream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/ostream \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/bitset \
-  /Users/jiluyang/Desktop/Lob/dateUtils.cpp \
+  /Users/jiluyang/Desktop/Lob/dateUtils.h \
   /Library/Developer/CommandLineTools/SDKs/MacOSX12.1.sdk/usr/include/c++/v1/iostream

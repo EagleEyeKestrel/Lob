@@ -7,9 +7,11 @@
 #include "fileWorker.h"
 #include <filesystem>
 #include <thread>
+#include "dateUtils.h"
+#include <iostream>
 
 namespace fs = std::filesystem;
-
+std::vector<FILE*> StockSimulator::outfile = std::vector<FILE*>(TimeBlocks, nullptr);
 
 void readRawInput(const char *input, bool ifBinary) {
     FileParser fp;
@@ -42,6 +44,19 @@ void simulateStocks() {
             }
         }
     }
+
+
+    for (int ofID = 0; ofID < TimeBlocks; ofID++) {
+        std::string ofPrefix = "./snapdata/";
+        std::string ofSuffix = ".dat";
+        std::string ofName = ofPrefix + intToStr(ofID, 3) + ofSuffix;
+        fs::create_directories(ofPrefix);
+
+        std::lock_guard<std::mutex> lock(mutexes[ofID]);
+        StockSimulator::outfile[ofID] = fopen(ofName.c_str(), "ab+");
+    }
+//    std::cout << "outfile initialized\n";
+
     auto ithSimulator = [&](int id) {
         for (int symbol = id; symbol < sims.size(); symbol += NUMTHREADS) {
             sims[symbol].run();
@@ -52,6 +67,9 @@ void simulateStocks() {
     }
     for (int i = 0; i < NUMTHREADS; i++) {
         threads[i].join();
+    }
+    for (int ofID = 0; ofID < TimeBlocks; ofID++) {
+        fclose(StockSimulator::outfile[ofID]);
     }
 //    for (auto &fu: futures) {
 //        fu.get();
