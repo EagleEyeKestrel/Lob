@@ -93,10 +93,12 @@ void FileParser::solveBinaryRaw(const char *path) {
         exit(1);
     }
     OrderRaw orderRaw;
+    std::cout << "read raw begin\n";
     while (fread(&orderRaw, sizeof(orderRaw), 1, infile) == 1) {
         saveStockOrderRaw(orderRaw);
     }
     fclose(infile);
+    std::cout << "read raw done\n";
 }
 
 
@@ -157,9 +159,7 @@ void FileSorter::run() {
 
     fclose(infile);
     std::sort(records.begin(), records.end());
-//    std::cerr << "in filesorter: "  << " will sort records\n";
     saveSortedRecords();
-//    std::cout << "in filesorter: "  << " sort done\n";
 }
 
 
@@ -187,12 +187,15 @@ void mergeFiles(const char *path, const char *output) {
     const char *header = "otindex|securityID|tradingDay|timeStamp|totalvolume|totalvalue|lastprice|bp5|bv5|bp4|bv4|bp3|bv3|bp2|bv2|bp1|bv1|ap1|av1|ap2|av2|ap3|av3|ap4|av4|ap5|av5\n";
     fwrite(header, strlen(header), 1, outfile);
     for (std::string &inputfile: fileNames) {
+//        std::cout << inputfile << std::endl;
         std::string inputPath = std::string(path) + "/" + inputfile;
         FILE *infile = fopen(inputPath.c_str(), "rb");
         char line[1000] = {0};
         int sz;
         while (fread(&sz, sizeof(int), 1, infile) == 1) {
             fread(line, sz, 1, infile);
+//            std::cout << sz << std::endl;
+//            std::cout << line << std::endl;
             line[sz] = '\n';
             fwrite(line, sz + 1, 1, outfile);
         }
