@@ -7,8 +7,6 @@
 
 int main(int argc, const char *argv[]) {
     auto start = std::chrono::steady_clock::now();
-
-
     Config cfg = parseArgs(argc, argv);
     readRawInput(cfg.input, cfg.ifBinary);
     std::cout << "simulate starts\n";

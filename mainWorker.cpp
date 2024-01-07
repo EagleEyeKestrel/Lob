@@ -22,29 +22,10 @@ void readRawInput(const char *input, bool ifBinary) {
     }
 }
 
+
 void simulateStocks() {
-//    ThreadPool pool(8);
-//    pool.init();
-    const int NUMTHREADS = 8;
-    std::thread threads[NUMTHREADS];
-
-
-    fs::path dir = "./input_split_data";
-//    std::vector<std::future<void>> futures;
-    std::vector<StockSimulator> sims;
-    for (auto &entry: fs::directory_iterator(dir)) {
-        if (entry.is_regular_file()) {
-            std::string fileName = entry.path().filename().string();
-            if (fileName.size() > 4 && fileName.substr(fileName.size() - 4) == ".dat" && fileName.find('-') != std::string::npos) {
-                std::string stockFile = dir.string() + "/" + fileName;
-                StockSimulator sim(stockFile);
-                sims.push_back(sim);
-//                futures.emplace_back(pool.submit(std::bind(&StockSimulator::run, &(sims.back()))));
-//                futures.emplace_back(pool.submit(std::mem_fn(&StockSimulator::run), &(sims.back())));
-            }
-        }
-    }
-
+    ThreadPool pool(8);
+    pool.init();
 
     for (int ofID = 0; ofID < TimeBlocks; ofID++) {
         std::string ofPrefix = "./snapdata/";
@@ -55,66 +36,63 @@ void simulateStocks() {
         std::lock_guard<std::mutex> lock(mutexes[ofID]);
         StockSimulator::outfile[ofID] = fopen(ofName.c_str(), "ab+");
     }
+
+    auto ithSimulator = [](StockSimulator &sim) {
+        sim.run();
+    };
+
+    fs::path dir = "./input_split_data";
+    std::vector<std::future<void>> futures;
+    for (auto &entry: fs::directory_iterator(dir)) {
+        if (entry.is_regular_file()) {
+            std::string fileName = entry.path().filename().string();
+            if (fileName.size() > 4 && fileName.substr(fileName.size() - 4) == ".dat" && fileName.find('-') != std::string::npos) {
+                std::string stockFile = dir.string() + "/" + fileName;
+                StockSimulator sim(stockFile);
+                futures.emplace_back(pool.submit(ithSimulator, sim));
+//                futures.emplace_back(pool.submit(std::bind(&StockSimulator::run, &(sims.back()))));
+//                futures.emplace_back(pool.submit(std::mem_fn(&StockSimulator::run), &(sims.back())));
+            }
+        }
+    }
+
 //    std::cout << "outfile initialized\n";
 
-    auto ithSimulator = [&](int id) {
-        for (int symbol = id; symbol < sims.size(); symbol += NUMTHREADS) {
-            sims[symbol].run();
-        }
-    };
-    for (int i = 0; i < NUMTHREADS; i++) {
-        threads[i] = std::thread(ithSimulator, i);
+    for (auto &fu: futures) {
+        fu.get();
     }
-    for (int i = 0; i < NUMTHREADS; i++) {
-        threads[i].join();
-    }
+    pool.shutdown();
     for (int ofID = 0; ofID < TimeBlocks; ofID++) {
         fclose(StockSimulator::outfile[ofID]);
     }
-//    for (auto &fu: futures) {
-//        fu.get();
-//    }
-//    pool.shutdown();
 }
 
 void sortSplitSnaps() {
-//    ThreadPool pool(8);
-//    pool.init();
-    const int NUMTHREADS = 8;
-    std::thread threads[NUMTHREADS];
+    ThreadPool pool(8);
+    pool.init();
+
     fs::path dir = "./snapdata";
-//    std::vector<std::future<void>> futures;
-    std::vector<FileSorter> sorters;
+    std::vector<std::future<void>> futures;
+
+    auto ithSorter = [](FileSorter &sorter) {
+        sorter.run();
+    };
 
     for (auto &entry: fs::directory_iterator(dir)) {
         if (entry.is_regular_file()) {
             std::string fileName = entry.path().filename().string();
             if (fileName.size() > 4 && fileName.substr(fileName.size() - 4) == ".dat") {
                 std::string snapFile = dir.string() + "/" + fileName;
-//                std::cerr << "snap file: " << snapFile <<  "\n";
-                sorters.emplace_back(snapFile);
-//                sorters.back().run();
-//                futures.emplace_back(pool.submit(std::bind(&FileSorter::run, &(sorters.back()))));
-//                futures.emplace_back(pool.submit(std::mem_fn(&FileSorter::run), &(sorters.back())));
+                futures.emplace_back(pool.submit(ithSorter, FileSorter(snapFile)));
             }
         }
     }
 
-    auto ithSorter = [&](int id) {
-        for (int i = id; i < sorters.size(); i += NUMTHREADS) {
-            sorters[i].run();
-        }
-    };
-    for (int i = 0; i < NUMTHREADS; i++) {
-        threads[i] = std::thread(ithSorter, i);
+
+    for (auto &fu: futures) {
+        fu.get();
     }
-    for (int i = 0; i < NUMTHREADS; i++) {
-        threads[i].join();
-    }
-//    for (auto &fu: futures) {
-//        fu.get();
-//    }
-//    pool.shutdown();
+    pool.shutdown();
 }
 
 

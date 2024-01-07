@@ -1,6 +1,0 @@
-# ninja log v5
-1	577	1704508523049772643	CMakeFiles/Lob.dir/main.cpp.o	bda21d9ddc7f1658
-2	525	1704506438423482775	CMakeFiles/Lob.dir/stockSim.cpp.o	4d46b60aab2ab1f1
-577	617	1704508523092893847	Lob	e661faba19d45d8
-1	530	1704507202551125643	CMakeFiles/Lob.dir/fileWorker.cpp.o	72fcda82cf93b166
-2	264	1704502694752401867	CMakeFiles/Lob.dir/global.cpp.o	51b24ab1f5a19e54

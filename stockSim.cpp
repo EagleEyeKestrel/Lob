@@ -27,15 +27,10 @@ StockSimulator::StockSimulator(std::string &stockFilePath) {
     symbol = stockFileName.substr(0, dash);
     filePath = stockFilePath;
 
-//    std::cout << "date: " << date << " symbol: " << symbol << "\n";
-//    std::cout << "open split file: " << stockFilePath << "\n";
-
 }
 
 
 void StockSimulator::solveOrderTrade(const OrderRaw &orderRaw) {
-//    std::cerr << "solve order trade type: " << (int)orderRaw.fieldType << "\n";
-
     if (orderRaw.fieldType == 0) {
         solveAskBidOrder(orderRaw);
     } else if (orderRaw.fieldType == 1) {
@@ -44,7 +39,6 @@ void StockSimulator::solveOrderTrade(const OrderRaw &orderRaw) {
         solveCanceledOrder(orderRaw);
     }
     lastProcessedIndex = orderRaw.index;
-//    std::cerr << "In symbol: " << orderRaw.securityID << " last index changes to " << orderRaw.index << "\n";
     lastProcessedSecond = getSecond(orderRaw.exchangeTime);
 }
 
@@ -165,12 +159,11 @@ void StockSimulator::saveSnap() {
 
 
 void StockSimulator::run() {
-    std::cout << filePath << " begins simulating\n";
+//    std::cout << filePath << " begins simulating\n";
     infile = std::fopen(filePath.c_str(), "rb");
 
     OrderRaw orderRaw;
     while (fread(&orderRaw, sizeof(orderRaw), 1, infile) == 1) {
-//        std::cout << "solving order index: " << orderRaw.index << ' ' << orderRaw.exchangeTime << "\n";
         int nowSecond = getSecond(orderRaw.exchangeTime);
         if (lastProcessedSecond >= 0 && nowSecond > lastProcessedSecond) {
             saveSnap();

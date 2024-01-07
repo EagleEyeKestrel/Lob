@@ -2,3 +2,6 @@
 input_split_data/*
 snapdata/*
 data/*
+*.out
+cmake-build-debug/*
+

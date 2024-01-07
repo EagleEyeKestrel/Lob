@@ -32,11 +32,9 @@ struct Order {
 struct Layer {
     Layer(): price(-1), volume(0) {}
     Layer(int _price, int _volume): price(_price), volume(_volume) {}
-//    Layer(std::string &_symbol): price(0), volume(0), symbol(_symbol) {}
 
     int price;
     int volume;
-//    std::string symbol;
 };
 
 struct L5 {
